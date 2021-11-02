@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -15,6 +16,39 @@ func main() {
 	r.Use(middleware.Logger)
 	// Timeout (60 second timeout)
 	r.Use(middleware.Timeout(60*time.Second))
+
+	// Full API structure
+	// base_url/customers/{customer_id}/certificates/{certificate_id}
+	// Features
+	//	/customers
+	//		* Create a customer
+	//		* Delete a customer
+	//	/customers/{customer_id}
+	//		* Delete a customer
+	//	/customers/{customer_id}/certificates
+	//		* Get all active certificates for a customer
+	//		* Create new certificate
+	//	/customers/{customer_id}/certificates/{certificate_id}
+	//		* Update active status for a certificate
+	//		* Delete certificate
+
+	// certificate IDs are relative to the customer
+	r.Route("/customers", func(r chi.Router) {
+		r.Post("/", createCustomer)
+		r.Route("/{customer_id}/certificates", func (r chi.Router)  {
+			r.Delete("/", deleteCustomer)
+			r.Route("/certificates", func (r chi.Router)  {
+				r.Get("/", getCertificates)
+				r.Post("/", createCertificate)
+				r.Route("/{certificate_id}", func(r chi.Router) {
+					r.Put("/", toggleCertificate) // updates activated status, details in sent json
+					r.Delete("/", deleteCertificate)
+				})
+			})
+		})
+	})
+	
+	http.ListenAndServe(":3000", r)
 }
 
 func errCheck(err error) {
