@@ -14,7 +14,8 @@ func dbSetup(baseURL string) (*Database, error) {
 	dbPassword := os.Getenv("GOREST_POSTGRES_PASSWORD")
 	dbName := os.Getenv("GOREST_POSTGRES_DB")
 
-	database := InitializeDB(dbUser, dbPassword, baseURL, dbName)
+	database, err := InitializeDB(dbUser, dbPassword, baseURL, dbName)
+	errCheck(err)
 }
 
 func main() {
