@@ -2,11 +2,20 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
+
+func dbSetup(baseURL string) (*Database, error) {
+	dbUser := os.Getenv("GOREST_POSTGRES_USER")
+	dbPassword := os.Getenv("GOREST_POSTGRES_PASSWORD")
+	dbName := os.Getenv("GOREST_POSTGRES_DB")
+
+	database := InitializeDB(dbUser, dbPassword, baseURL, dbName)
+}
 
 func main() {
 	// ROUTER SETUP
