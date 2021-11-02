@@ -12,19 +12,16 @@ type Database struct {
 	conn *pgx.Conn
 }
 
-func InitializeDB(username, password, baseURL, dbname string) *Database {
+func InitializeDB(username, password, baseURL, dbname string) (*Database, error) {
 	var dbURL string = fmt.Sprintf("postgres://%s:%s@%s/%s", username, password, baseURL, dbname)
 	conn, err := pgx.Connect(context.Background(), dbURL)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Database connection failed: %v\n", err)
-		os.Exit(1)
-	}
+	
 	defer conn.Close(context.Background())
 
 	d := new(Database)
 	d.conn = conn
 
-	return d
+	return d, err
 }
 
 
