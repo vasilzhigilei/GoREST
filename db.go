@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/jackc/pgx/v4"
@@ -28,8 +29,10 @@ func (d *Database) CreateCustomer(customer *Customer) error {
 	return err
 }
 
-func (d *Database) DeleteCustomer(customer_id uint) error {
-	return nil
+func (d *Database) DeleteCustomer(customer_id string) error {
+	_, err := db.conn.Exec(context.Background(), 
+		"DELETE FROM customers WHERE id=" + customer_id + "j")
+	return err
 }
 
 func (d *Database) GetCertificates(customer_id string) ([]Certificate, error) {
@@ -39,8 +42,14 @@ func (d *Database) GetCertificates(customer_id string) ([]Certificate, error) {
 	return certificates, err
 }
 
-func (d *Database) CreateCertificate(customer_id uint, certificate *Certificate) error {
-	return nil
+func (d *Database) CreateCertificate(customer_id string, certificate *Certificate) error {
+	jsonCert, err := json.Marshal(certificate)
+	if err != nil {
+		return err
+	}
+	_, err = db.conn.Exec(context.Background(), 
+		"UPDATE customers SET certificates=certificates||'" + string(jsonCert) + "'::json WHERE id=" + customer_id + ";")
+	return err
 }
 
 func (d *Database) DeleteCertificate(customer_id uint, certificate_id uint) error {

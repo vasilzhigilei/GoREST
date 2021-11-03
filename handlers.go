@@ -32,14 +32,18 @@ func createCustomer(w http.ResponseWriter, r *http.Request){
 }
 
 func deleteCustomer(w http.ResponseWriter, r *http.Request){
+	customer_id := chi.URLParam(r, "customer_id")
+	checkErrHttp(nil, len(customer_id) > 0, &w)
 
+	err := db.DeleteCustomer(customer_id)
+	checkErrHttp(err, true, &w)
 }
 
 func getCertificates(w http.ResponseWriter, r *http.Request){
-	val := chi.URLParam(r, "customer_id")
-	checkErrHttp(nil, len(val) > 0, &w)
+	customer_id := chi.URLParam(r, "customer_id")
+	checkErrHttp(nil, len(customer_id) > 0, &w)
 	
-	certificates, err := db.GetCertificates(val)
+	certificates, err := db.GetCertificates(customer_id)
 	checkErrHttp(err, true, &w)
 
 	jsonResp, err := json.Marshal(certificates)
