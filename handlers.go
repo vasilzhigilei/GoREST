@@ -1,11 +1,10 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"io"
-	"io/ioutil"
+	"encoding/json"
 	"net/http"
+
+	"github.com/go-chi/chi"
 )
 
 type Customer struct {
@@ -23,10 +22,13 @@ type Certificate struct {
 }
 
 func createCustomer(w http.ResponseWriter, r *http.Request){
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	// note to self, hash password
+	var customer Customer
+	err := json.NewDecoder(r.Body).Decode(&customer)
 	checkErrHttp(err, true, &w)
-	fmt.Fprintf(w, string(body))
-	//_, err := db.conn.Exec(context.Background(), "INSERT INTO customers VALUES($1, $2, $3, $4)")
+	
+	err = db.CreateCustomer(&customer)
+	checkErrHttp(err, true, &w)
 }
 
 func deleteCustomer(w http.ResponseWriter, r *http.Request){
@@ -34,14 +36,16 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request){
 }
 
 func getCertificates(w http.ResponseWriter, r *http.Request){
-	ctx := r.Context()
-	custID, ok := ctx.Value("customer_id").(uint)
-	checkErrHttp(nil, ok, &w)
-	querystr := "SELECT certificates FROM customers WHERE id=" + string(custID) + ";"
-	var result string
-	err := db.conn.QueryRow(context.Background(), querystr).Scan(result)
+	val := chi.URLParam(r, "customer_id")
+	checkErrHttp(nil, len(val) > 0, &w)
+	
+	certificates, err := db.GetCertificates(val)
 	checkErrHttp(err, true, &w)
-	w.Write([]byte(result))
+
+	jsonResp, err := json.Marshal(certificates)
+	checkErrHttp(err, true, &w)
+
+	w.Write(jsonResp)
 }
 
 func createCertificate(w http.ResponseWriter, r *http.Request){

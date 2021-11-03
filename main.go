@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -35,7 +36,11 @@ func main() {
 	// Database connection
 	var err error
 	db, err = dbSetup()
-	checkErr(err)
+	if err != nil {
+		time.Sleep(3*time.Second)
+		db, err = dbSetup()
+		checkErr(err)
+	}
 	defer db.conn.Close(context.Background())
 
 	// Full API structure
@@ -54,7 +59,7 @@ func main() {
 	//		* Delete certificate
 	r.Route("/customers", func(r chi.Router) {
 		r.Post("/", createCustomer)
-		r.Route("/{customer_id}/certificates", func (r chi.Router)  {
+		r.Route("/{customer_id}", func (r chi.Router)  {
 			r.Delete("/", deleteCustomer)
 			r.Route("/certificates", func (r chi.Router)  {
 				r.Get("/", getCertificates)
@@ -73,6 +78,7 @@ func main() {
 func checkErrHttp(err error, ok bool, w *http.ResponseWriter){
 	if err != nil || !ok {
 		http.Error(*w, http.StatusText(500), 500)
+		fmt.Println(err, ok)
 	}
 }
 
