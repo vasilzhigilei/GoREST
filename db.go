@@ -52,10 +52,6 @@ func (d *Database) CreateCertificate(customer_id string, certificate *Certificat
 	return err
 }
 
-func (d *Database) DeleteCertificate(customer_id uint, certificate_id uint) error {
-	return nil
-}
-
 func (d *Database) ToggleCertificate(customer *Customer) error {
 	return nil
 }

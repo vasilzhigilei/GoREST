@@ -56,7 +56,6 @@ func main() {
 	//		* Create new certificate
 	//	/customers/{customer_id}/certificates/{certificate_id}
 	//		* Update active status for a certificate
-	//		* Delete certificate
 	r.Route("/customers", func(r chi.Router) {
 		r.Post("/", createCustomer)
 		r.Route("/{customer_id}", func (r chi.Router)  {
@@ -66,7 +65,6 @@ func main() {
 				r.Post("/", createCertificate)
 				r.Route("/{certificate_id}", func(r chi.Router) {
 					r.Put("/", toggleCertificate) // updates activated status, details in sent json
-					r.Delete("/", deleteCertificate)
 				})
 			})
 		})

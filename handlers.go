@@ -46,7 +46,14 @@ func getCertificates(w http.ResponseWriter, r *http.Request){
 	certificates, err := db.GetCertificates(customer_id)
 	checkErrHttp(err, true, &w)
 
-	jsonResp, err := json.Marshal(certificates)
+	var activeCerts []Certificate
+	for i := 0; i < len(certificates); i++ {
+		if certificates[i].Active {
+			activeCerts = append(activeCerts, certificates[i])
+		}
+	}
+
+	jsonResp, err := json.Marshal(activeCerts)
 	checkErrHttp(err, true, &w)
 
 	w.Write(jsonResp)
