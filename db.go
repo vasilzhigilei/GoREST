@@ -11,8 +11,8 @@ type Database struct {
 	conn *pgx.Conn
 }
 
-func InitializeDB(username, password, baseURL, dbname string) (*Database, error) {
-	var dbURL string = fmt.Sprintf("postgres://%s:%s@%s/%s", username, password, baseURL, dbname)
+func InitializeDB(username, password, URL, dbname string) (*Database, error) {
+	var dbURL string = fmt.Sprintf("postgres://%s:%s@%s:5432/%s", username, password, URL, dbname)
 	conn, err := pgx.Connect(context.Background(), dbURL)
 	
 	defer conn.Close(context.Background())

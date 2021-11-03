@@ -9,12 +9,13 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-func dbSetup(baseURL string) (*Database, error) {
+func dbSetup() (*Database, error) {
 	dbUser := os.Getenv("GOREST_POSTGRES_USER")
 	dbPassword := os.Getenv("GOREST_POSTGRES_PASSWORD")
-	dbName := os.Getenv("GOREST_POSTGRES_DB")
+	dbURL := os.Getenv("GOREST_POSTGRES_URL") // without 5432
+	dbName := os.Getenv("GOREST_POSTGRES_NAME")
 
-	database, err := InitializeDB(dbUser, dbPassword, baseURL, dbName)
+	database, err := InitializeDB(dbUser, dbPassword, dbURL, dbName)
 	
 	return database, err
 }

@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${GOREST_POSTGRESS_USER}
+      POSTGRES_PASSWORD: ${GOREST_POSTGRESS_PASSWORD}
+      POSTGRES_DB: ${GOREST_POSTGRESS_NAME}
+    ports:
+      - "5432:5432"
+    volumes: 
+      - dbdata:/var/lib/postgresql/data
+
+  go:
+    container_name: go
+    # build the Dockerfile, alternatively use an image.
+    build:
+      context: .
+    depends_on:
+      - "postgres"
+
+volumes:
+  dbdata: # create the volume for persisting data.
