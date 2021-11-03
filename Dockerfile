@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.11
+FROM golang:1.17
 
 # Download Go modules
 WORKDIR /app
@@ -15,4 +15,4 @@ RUN go build -o /gorest
  
 EXPOSE 8080
  
-CMD ["gorest"]
+CMD ["/gorest"]
