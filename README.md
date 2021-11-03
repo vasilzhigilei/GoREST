@@ -3,12 +3,7 @@ HTTP-based RESTful API written in Golang. Utilizes Postgres and Docker.
 
 ### Setup and run
 ```
-sudo docker build --tag gorest .
-```
-
-```
-# Start Postgres container
-docker run -e GOREST_POSTGRES_USER=user -e GOREST_POSTGRES_PASSWORD=secret -e GOREST_POSTGRES_URL=localhost -e GOREST_POSTGRES_NAME=gorest
+sudo docker-compose up --build
 ```
 
 ### Technologies used

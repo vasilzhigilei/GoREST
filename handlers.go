@@ -26,7 +26,7 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request){
 
 func getCertificates(w http.ResponseWriter, r *http.Request){
 	ctx := r.Context()
-	customer_id, ok := ctx.Value("customer_id").(uint)
+	_, ok := ctx.Value("customer_id").(uint)
 	if !ok {
 		http.Error(w, http.StatusText(500), 500)
 	}
