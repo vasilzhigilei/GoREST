@@ -5,21 +5,24 @@ services:
     container_name: postgres
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${GOREST_POSTGRESS_USER}
-      POSTGRES_PASSWORD: ${GOREST_POSTGRESS_PASSWORD}
-      POSTGRES_DB: ${GOREST_POSTGRESS_NAME}
+      POSTGRES_USER: user #${GOREST_POSTGRESS_USER}
+      POSTGRES_PASSWORD: password #${GOREST_POSTGRESS_PASSWORD}
+      POSTGRES_DB: gorest #${GOREST_POSTGRESS_NAME}
     ports:
       - "5432:5432"
     volumes: 
-      - dbdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgresql/dbdata
 
   go:
     container_name: go
     # build the Dockerfile, alternatively use an image.
     build:
       context: .
+      dockerfile: Dockerfile
     depends_on:
       - "postgres"
+    ports:
+      - "8080:8080"
 
 volumes:
   dbdata: # create the volume for persisting data.

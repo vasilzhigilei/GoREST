@@ -30,21 +30,21 @@ func (d *Database) CreateCustomer(customer *Customer) error {
 }
 
 func (d *Database) DeleteCustomer(customer_id uint) error {
-	
+	return nil
 }
 
 func (d *Database) GetCertificates(customer_id uint) error {
-	
+	return nil
 }
 
 func (d *Database) CreateCertificate(customer_id uint, certificate *Certificate) error {
-	
+	return nil
 }
 
 func (d *Database) DeleteCertificate(customer_id uint, certificate_id uint) error {
-	
+	return nil
 }
 
 func (d *Database) ToggleCertificate(customer *Customer) error {
-	
+	return nil
 }
