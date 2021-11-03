@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/http"
 	"os"
 	"time"
@@ -10,15 +11,17 @@ import (
 )
 
 func dbSetup() (*Database, error) {
-	dbUser := os.Getenv("GOREST_POSTGRES_USER")
-	dbPassword := os.Getenv("GOREST_POSTGRES_PASSWORD")
-	dbURL := os.Getenv("GOREST_POSTGRES_URL") // without 5432
-	dbName := os.Getenv("GOREST_POSTGRES_NAME")
+	dbUser := os.Getenv("POSTGRES_USER")
+	dbPassword := os.Getenv("POSTGRES_PASSWORD")
+	dbURL := "postgres"
+	dbName := os.Getenv("POSTGRES_DB")
 
 	database, err := InitializeDB(dbUser, dbPassword, dbURL, dbName)
 	
 	return database, err
 }
+
+var db *Database
 
 func main() {
 	// ROUTER SETUP
@@ -28,6 +31,12 @@ func main() {
 	r.Use(middleware.Logger)
 	// Timeout (60 second timeout)
 	r.Use(middleware.Timeout(60*time.Second))
+
+	// Database connection
+	var err error
+	db, err = dbSetup()
+	checkErr(err)
+	defer db.conn.Close(context.Background())
 
 	// Full API structure
 	// base_url/customers/{customer_id}/certificates/{certificate_id}
@@ -43,8 +52,6 @@ func main() {
 	//	/customers/{customer_id}/certificates/{certificate_id}
 	//		* Update active status for a certificate
 	//		* Delete certificate
-
-	// certificate IDs are relative to the customer
 	r.Route("/customers", func(r chi.Router) {
 		r.Post("/", createCustomer)
 		r.Route("/{customer_id}/certificates", func (r chi.Router)  {
@@ -63,7 +70,13 @@ func main() {
 	http.ListenAndServe(":8080", r)
 }
 
-func errCheck(err error) {
+func checkErrHttp(err error, ok bool, w *http.ResponseWriter){
+	if err != nil || !ok {
+		http.Error(*w, http.StatusText(500), 500)
+	}
+}
+
+func checkErr(err error) {
 	if err != nil {
 		panic(err)
 	}

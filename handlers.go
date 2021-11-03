@@ -1,6 +1,12 @@
 package main
 
-import "net/http"
+import (
+	"context"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+)
 
 type Customer struct {
 	ID uint `json:"id"`
@@ -17,7 +23,10 @@ type Certificate struct {
 }
 
 func createCustomer(w http.ResponseWriter, r *http.Request){
-	
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	checkErrHttp(err, true, &w)
+	fmt.Fprintf(w, string(body))
+	//_, err := db.conn.Exec(context.Background(), "INSERT INTO customers VALUES($1, $2, $3, $4)")
 }
 
 func deleteCustomer(w http.ResponseWriter, r *http.Request){
@@ -26,11 +35,13 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request){
 
 func getCertificates(w http.ResponseWriter, r *http.Request){
 	ctx := r.Context()
-	_, ok := ctx.Value("customer_id").(uint)
-	if !ok {
-		http.Error(w, http.StatusText(500), 500)
-	}
-	
+	custID, ok := ctx.Value("customer_id").(uint)
+	checkErrHttp(nil, ok, &w)
+	querystr := "SELECT certificates FROM customers WHERE id=" + string(custID) + ";"
+	var result string
+	err := db.conn.QueryRow(context.Background(), querystr).Scan(result)
+	checkErrHttp(err, true, &w)
+	w.Write([]byte(result))
 }
 
 func createCertificate(w http.ResponseWriter, r *http.Request){
