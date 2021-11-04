@@ -1,0 +1,6 @@
+{
+    "id": 123,
+    "Active": true,
+    "privatekey": "helloworld",
+    "body": "body-of-new-certificate"
+}

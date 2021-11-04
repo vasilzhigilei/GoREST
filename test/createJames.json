@@ -1,0 +1,18 @@
+{
+    "name": "James",
+    "password": "mypassword",
+    "certificates": [
+        {
+            "id": 1,
+            "Active": true,
+            "privatekey": "privatekey",
+            "body": "body of James' first certificate"
+        },
+        {
+            "id": 7,
+            "Active": true,
+            "privatekey": "privatekey",
+            "body": "body of James' other certificate"
+        }
+    ]
+}
