@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/jackc/pgx/v4"
 )
@@ -68,6 +70,18 @@ func (d *Database) ToggleCertificate(customer_id string, certificate_id uint, ac
 			}
 			_, err = db.conn.Exec(context.Background(), 
 				"UPDATE customers SET certificates='" + string(jsonCert) + "'::jsonb WHERE id=" + customer_id + ";")
+			
+			if len(certificates[i].WebhookURL) > 0 {
+				certWebhook := CertificateWebhook{certificates[i].ID, certificates[i].Active}
+				jsonBytes, err := json.Marshal(certWebhook)
+				if err != nil {
+					return err
+				}
+				_, err = http.Post(certificates[i].WebhookURL, "application/json", bytes.NewBuffer(jsonBytes))
+				if err != nil {
+					return err
+				}
+			}
 			return err
 		}
 	}

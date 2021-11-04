@@ -21,6 +21,12 @@ type Certificate struct {
 	Active bool `json:"active"`
 	PrivateKey string `json:"privatekey"`
 	Body string `json:"body"`
+	WebhookURL string `json:"webhookurl"`
+}
+
+type CertificateWebhook struct {
+	ID uint `json:"id"`
+	Active bool `json:"active"`
 }
 
 type Active struct {

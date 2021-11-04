@@ -9,8 +9,6 @@ sudo docker-compose up --build
 further considerations:
 future work
 protection against SQL injections
-optimized certificate updating using jsonb_set
-setup webhook
 
 ### Technologies used
 * Golang
