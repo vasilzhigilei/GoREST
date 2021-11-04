@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Customer struct {
@@ -27,6 +28,11 @@ func createCustomer(w http.ResponseWriter, r *http.Request){
 	var customer Customer
 	err := json.NewDecoder(r.Body).Decode(&customer)
 	checkErrHttp(err, true, &w)
+	
+	passBytes, err := bcrypt.GenerateFromPassword([]byte(customer.Password), 14)
+	checkErrHttp(err, true, &w)
+
+	customer.Password = string(passBytes)
 	
 	err = db.CreateCustomer(&customer)
 	checkErrHttp(err, true, &w)
