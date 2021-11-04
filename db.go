@@ -48,7 +48,7 @@ func (d *Database) CreateCertificate(customer_id string, certificate *Certificat
 		return err
 	}
 	_, err = db.conn.Exec(context.Background(), 
-		"UPDATE customers SET certificates=certificates||'" + string(jsonCert) + "'::json WHERE id=" + customer_id + ";")
+		"UPDATE customers SET certificates=certificates||'" + string(jsonCert) + "'::jsonb WHERE id=" + customer_id + ";")
 	return err
 }
 
@@ -67,7 +67,7 @@ func (d *Database) ToggleCertificate(customer_id string, certificate_id uint, ac
 				return err
 			}
 			_, err = db.conn.Exec(context.Background(), 
-				"UPDATE customers SET certificates='" + string(jsonCert) + "'::json WHERE id=" + customer_id + ";")
+				"UPDATE customers SET certificates='" + string(jsonCert) + "'::jsonb WHERE id=" + customer_id + ";")
 			return err
 		}
 	}
