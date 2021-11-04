@@ -10,8 +10,6 @@ further considerations:
 future work
 protection against SQL injections
 optimized certificate updating using jsonb_set
-double check data persistence on postgres server
-hash passwords
 setup webhook
 
 ### Technologies used

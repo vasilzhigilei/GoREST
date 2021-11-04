@@ -52,7 +52,7 @@ func (d *Database) CreateCertificate(customer_id string, certificate *Certificat
 	return err
 }
 
-func (d *Database) ToggleCertificate(customer_id string, certificate_id uint, active bool) error {
+func (d *Database) ToggleCertificate(customer_id string, certificate_id uint, active Active) error {
 	querystr := "SELECT certificates FROM customers WHERE id=" + customer_id + ";"
 	var certificates []Certificate
 	err := db.conn.QueryRow(context.Background(), querystr).Scan(&certificates)
@@ -61,7 +61,7 @@ func (d *Database) ToggleCertificate(customer_id string, certificate_id uint, ac
 	}
 	for i := 0; i < len(certificates); i++ {
 		if certificates[i].ID == certificate_id {
-			certificates[i].Active = active
+			certificates[i].Active = active.Active
 			jsonCert, err := json.Marshal(certificates)
 			if err != nil {
 				return err

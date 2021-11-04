@@ -23,6 +23,10 @@ type Certificate struct {
 	Body string `json:"body"`
 }
 
+type Active struct {
+	Active bool `json:"active"`
+}
+
 func createCustomer(w http.ResponseWriter, r *http.Request){
 	// note to self, hash password
 	var customer Customer
@@ -33,7 +37,7 @@ func createCustomer(w http.ResponseWriter, r *http.Request){
 	checkErrHttp(err, true, &w)
 
 	customer.Password = string(passBytes)
-	
+
 	err = db.CreateCustomer(&customer)
 	checkErrHttp(err, true, &w)
 }
@@ -87,7 +91,7 @@ func toggleCertificate(w http.ResponseWriter, r *http.Request){
 	certificate_id_uint, err := strconv.ParseUint(certificate_id, 10, 0)
 	checkErrHttp(err, true, &w)
 
-	var active bool
+	var active Active
 	err = json.NewDecoder(r.Body).Decode(&active)
 	checkErrHttp(err, true, &w)
 	
