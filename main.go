@@ -64,7 +64,7 @@ func main() {
 				r.Get("/", getCertificates)
 				r.Post("/", createCertificate)
 				r.Route("/{certificate_id}", func(r chi.Router) {
-					r.Put("/", toggleCertificate) // updates activated status, details in sent json
+					r.Put("/", toggleCertificate)
 				})
 			})
 		})

@@ -6,6 +6,11 @@ HTTP-based RESTful API written in Golang. Utilizes Postgres and Docker.
 sudo docker-compose up --build
 ```
 
+further considerations:
+future work
+protection against SQL injections
+optimized certificate updating using jsonb_set
+
 ### Technologies used
 * Golang
     * Chi

@@ -31,7 +31,7 @@ func (d *Database) CreateCustomer(customer *Customer) error {
 
 func (d *Database) DeleteCustomer(customer_id string) error {
 	_, err := db.conn.Exec(context.Background(), 
-		"DELETE FROM customers WHERE id=" + customer_id + "j")
+		"DELETE FROM customers WHERE id=" + customer_id + ";")
 	return err
 }
 
@@ -52,6 +52,24 @@ func (d *Database) CreateCertificate(customer_id string, certificate *Certificat
 	return err
 }
 
-func (d *Database) ToggleCertificate(customer *Customer) error {
-	return nil
+func (d *Database) ToggleCertificate(customer_id string, certificate_id uint, active bool) error {
+	querystr := "SELECT certificates FROM customers WHERE id=" + customer_id + ";"
+	var certificates []Certificate
+	err := db.conn.QueryRow(context.Background(), querystr).Scan(&certificates)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < len(certificates); i++ {
+		if certificates[i].ID == certificate_id {
+			certificates[i].Active = active
+			jsonCert, err := json.Marshal(certificates)
+			if err != nil {
+				return err
+			}
+			_, err = db.conn.Exec(context.Background(), 
+				"UPDATE customers SET certificates='" + string(jsonCert) + "'::json WHERE id=" + customer_id + ";")
+			return err
+		}
+	}
+	return err
 }

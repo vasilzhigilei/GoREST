@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi"
 )
@@ -60,13 +61,30 @@ func getCertificates(w http.ResponseWriter, r *http.Request){
 }
 
 func createCertificate(w http.ResponseWriter, r *http.Request){
+	customer_id := chi.URLParam(r, "customer_id")
+	checkErrHttp(nil, len(customer_id) > 0, &w)
 
+	var certificate Certificate
+	err := json.NewDecoder(r.Body).Decode(&certificate)
+	checkErrHttp(err, true, &w)
+
+	err = db.CreateCertificate(customer_id, &certificate)
+	checkErrHttp(err, true, &w)
 }
 
 func toggleCertificate(w http.ResponseWriter, r *http.Request){
+	customer_id := chi.URLParam(r, "customer_id")
+	checkErrHttp(nil, len(customer_id) > 0, &w)
+	
+	certificate_id := chi.URLParam(r, "certificate_id")
+	checkErrHttp(nil, len(certificate_id) > 0, &w)
+	certificate_id_uint, err := strconv.ParseUint(certificate_id, 10, 0)
+	checkErrHttp(err, true, &w)
 
-}
-
-func deleteCertificate(w http.ResponseWriter, r *http.Request){
-
+	var active bool
+	err = json.NewDecoder(r.Body).Decode(&active)
+	checkErrHttp(err, true, &w)
+	
+	err = db.ToggleCertificate(customer_id, uint(certificate_id_uint), active)
+	checkErrHttp(err, true, &w)
 }
