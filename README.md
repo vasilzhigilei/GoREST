@@ -59,6 +59,7 @@ sudo docker-compose down
     "id": 2
 }
 ```
+<sup>Note: A URL may be specified when creating a certificate. This URL will be used whenever the server receives a PUT request to toggle the active status of this certificate.</sup>
 
 ### Full API structure
 
