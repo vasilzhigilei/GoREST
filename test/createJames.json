@@ -6,13 +6,15 @@
             "id": 1,
             "Active": true,
             "privatekey": "privatekey",
-            "body": "body of James' first certificate"
+            "body": "body of first certificate",
+            "webhookurl": ""
         },
         {
             "id": 7,
             "Active": true,
             "privatekey": "privatekey",
-            "body": "body of James' other certificate"
+            "body": "body of another certificate",
+            "webhookurl": ""
         }
     ]
 }

@@ -8,9 +8,21 @@ HTTP-based RESTful API written in Golang. Utilizes Postgres and Docker.
 * Postgres
 * Docker
 
-## Setup and run
+## Run it!
+### Setup and run
 ```
 sudo docker-compose up --build
+```
+
+### Testing
+```
+./curlTest.sh
+```
+Before rerunning, make sure to delete the postgres-data/ folder (`sudo rm -r -f postgres-data/`)and rerun the docker-compose build command. The testing bash script assumes this is a fresh never-before-used table where the two customer IDs will be 1 and 2.
+
+### Stop and remove containers, network, images, etc.
+```
+sudo docker-compose down
 ```
 
 ## API details
@@ -38,6 +50,13 @@ sudo docker-compose up --build
 ```
 }
     "active": false
+}
+```
+#### Webhook JSON (received at optionally provided webhook URL)
+```
+{
+    "active": false,
+    "id": 2
 }
 ```
 

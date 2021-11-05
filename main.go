@@ -37,9 +37,14 @@ func main() {
 	var err error
 	db, err = dbSetup()
 	if err != nil {
-		time.Sleep(3*time.Second)
-		db, err = dbSetup()
-		checkErr(err)
+		for i := 0; i < 3; i++ { // try connecting 3 more times, 3 seconds apart
+			time.Sleep(3*time.Second)
+			db, err = dbSetup()
+			if err == nil{
+				break
+			}
+		}
+		checkErr(err) // if nil nothing happens, if not, panics
 	}
 	defer db.conn.Close(context.Background())
 
