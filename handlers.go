@@ -33,8 +33,8 @@ type Active struct {
 	Active bool `json:"active"`
 }
 
+// Creates a customer in the database based on customer JSON object
 func createCustomer(w http.ResponseWriter, r *http.Request){
-	// note to self, hash password
 	var customer Customer
 	err := json.NewDecoder(r.Body).Decode(&customer)
 	checkErrHttp(err, true, &w)
@@ -48,6 +48,7 @@ func createCustomer(w http.ResponseWriter, r *http.Request){
 	checkErrHttp(err, true, &w)
 }
 
+// Deletes a customer in the database based on the included ID
 func deleteCustomer(w http.ResponseWriter, r *http.Request){
 	customer_id := chi.URLParam(r, "customer_id")
 	checkErrHttp(nil, len(customer_id) > 0, &w)
@@ -56,6 +57,7 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request){
 	checkErrHttp(err, true, &w)
 }
 
+// Provides all active certificates for a given customer based on customer ID
 func getCertificates(w http.ResponseWriter, r *http.Request){
 	customer_id := chi.URLParam(r, "customer_id")
 	checkErrHttp(nil, len(customer_id) > 0, &w)
@@ -76,6 +78,7 @@ func getCertificates(w http.ResponseWriter, r *http.Request){
 	w.Write(jsonResp)
 }
 
+// Adds additional certificate to customer based on customer ID
 func createCertificate(w http.ResponseWriter, r *http.Request){
 	customer_id := chi.URLParam(r, "customer_id")
 	checkErrHttp(nil, len(customer_id) > 0, &w)
@@ -88,6 +91,8 @@ func createCertificate(w http.ResponseWriter, r *http.Request){
 	checkErrHttp(err, true, &w)
 }
 
+// Either makes certificate with ID=certificate_id active or unactive
+// If certificate field for URL is not empty, sends event update to URL
 func toggleCertificate(w http.ResponseWriter, r *http.Request){
 	customer_id := chi.URLParam(r, "customer_id")
 	checkErrHttp(nil, len(customer_id) > 0, &w)

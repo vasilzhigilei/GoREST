@@ -11,6 +11,8 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
+// Sets up database by fetching environment variables and calling DB related function
+// returns database, err
 func dbSetup() (*Database, error) {
 	dbUser := os.Getenv("POSTGRES_USER")
 	dbPassword := os.Getenv("POSTGRES_PASSWORD")
@@ -78,6 +80,7 @@ func main() {
 	http.ListenAndServe(":8080", r)
 }
 
+// Writes HTTP error code if there is an error or if ok boolean is false
 func checkErrHttp(err error, ok bool, w *http.ResponseWriter){
 	if err != nil || !ok {
 		http.Error(*w, http.StatusText(500), 500)
@@ -85,6 +88,7 @@ func checkErrHttp(err error, ok bool, w *http.ResponseWriter){
 	}
 }
 
+// Exit the program if there is an error (used rarely)
 func checkErr(err error) {
 	if err != nil {
 		panic(err)

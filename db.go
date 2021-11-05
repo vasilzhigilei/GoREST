@@ -14,6 +14,8 @@ type Database struct {
 	conn *pgx.Conn
 }
 
+// Connects to postgres database
+// returns database connection struct
 func InitializeDB(username, password, URL, dbname string) (*Database, error) {
 	var dbURL string = fmt.Sprintf("postgres://%s:%s@%s:5432/%s", username, password, URL, dbname)
 	conn, err := pgx.Connect(context.Background(), dbURL)
@@ -24,19 +26,24 @@ func InitializeDB(username, password, URL, dbname string) (*Database, error) {
 	return d, err
 }
 
-
+// Inserts customer into customers table
+// returns err
 func (d *Database) CreateCustomer(customer *Customer) error {
 	_, err := db.conn.Exec(context.Background(), 
 		"INSERT INTO customers (name, password, certificates) VALUES($1, $2, $3)", customer.Name, customer.Password, customer.Certificates)
 	return err
 }
 
+// Deletes customer where ID matches provided ID
+// returns err
 func (d *Database) DeleteCustomer(customer_id string) error {
 	_, err := db.conn.Exec(context.Background(), 
 		"DELETE FROM customers WHERE id=" + customer_id + ";")
 	return err
 }
 
+// Retrieves all certificates for a given customer
+// returns certificates (list of Certificate structs), err
 func (d *Database) GetCertificates(customer_id string) ([]Certificate, error) {
 	querystr := "SELECT certificates FROM customers WHERE id=" + customer_id + ";"
 	var certificates []Certificate
@@ -44,6 +51,8 @@ func (d *Database) GetCertificates(customer_id string) ([]Certificate, error) {
 	return certificates, err
 }
 
+// Updates certificate list of a given customer with the addition of a new certificate
+// returns err
 func (d *Database) CreateCertificate(customer_id string, certificate *Certificate) error {
 	jsonCert, err := json.Marshal(certificate)
 	if err != nil {
@@ -54,6 +63,8 @@ func (d *Database) CreateCertificate(customer_id string, certificate *Certificat
 	return err
 }
 
+// Updates certificate active status based on certificate ID for a given customer
+// returns err
 func (d *Database) ToggleCertificate(customer_id string, certificate_id uint, active Active) error {
 	querystr := "SELECT certificates FROM customers WHERE id=" + customer_id + ";"
 	var certificates []Certificate
