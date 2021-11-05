@@ -61,7 +61,7 @@ sudo docker-compose down
     "id": 2
 }
 ```
-<sup>Note: A URL may be specified when creating a certificate. This URL will be used whenever the server receives a PUT request to toggle the active status of this certificate.</sup>
+<sup>Note: A URL may be specified when creating a certificate. This URL will be used whenever the server receives a PUT request to toggle the active status of this certificate. I personally used http://requestb.in/ to confirm functionality of this feature.</sup>
 
 ### Full API structure
 
