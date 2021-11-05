@@ -88,3 +88,6 @@ sudo docker-compose down
 * main.go - contains main function
 * handlers - handlers for http requests
 * db.go - functions relating to database access
+
+## Future work
+As the primary purpose of this project was to develop a simple REST API, SQL injection prevention was not a focus. SQL injection prevention would need to be developed if this project were to be intended for production.
