@@ -20,6 +20,8 @@ sudo docker-compose up --build
 ```
 Before rerunning, make sure to delete the postgres-data/ folder (`sudo rm -r -f postgres-data/`)and rerun the docker-compose build command. The testing bash script assumes this is a fresh never-before-used table where the two customer IDs will be 1 and 2.
 
+![GoREST curlTest.sh results.](images/curlScriptOutput_4Nov2021.png)
+
 ### Stop and remove containers, network, images, etc.
 ```
 sudo docker-compose down
